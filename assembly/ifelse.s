@@ -12,7 +12,7 @@ main:
     str r0, [r13,#8]
     b endif
 else:
-    str r1, [r13,#8]
+    str r2, [r13,#8]
 endif:
 
     
