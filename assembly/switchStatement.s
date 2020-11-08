@@ -8,19 +8,19 @@ main:
     ldr r1, [r13, #4] // b = 2
     ldr r2, [r13, #8] // c = 3
     
-    cmp r0, 0x1       // compare a to 1
+    cmp r0, #1       // compare a to 1
     beq case1
-    cmp r0, 0x2       // compare a to 2
+    cmp r0, #2       // compare a to 2
     beq case2
-    cmp r0, 0x3       // compare a to 3
+    cmp r0, #3       // compare a to 3
     beq case3
-    cmp r0, 0x4       // compare a to 4
+    cmp r0, #4       // compare a to 4
     beq case4
-    cmp r0, 0x5       // compare a to 5
+    cmp r0, #5       // compare a to 5
     beq case5
-    cmp r0, 0x6       // compare a to 6
+    cmp r0, #6       // compare a to 6
     beq case6
-    cmp r0, 0x7       // compare a to 7
+    cmp r0, #7       // compare a to 7
     beq case7
     b caseDefault
 
