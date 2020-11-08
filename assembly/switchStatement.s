@@ -23,7 +23,6 @@ main:
     cmp r0, #7       // compare a to 7
     beq case7
     b caseDefault
-
 case1:
     add r0, r1, r2      // adding b & c, storing in a
     str r0, [r13, #0]
@@ -56,4 +55,4 @@ caseDefault:
     mov r0, #0          // make a = 0
     str r0, [r13, #0]
 endif:
-    //blank af
+    //blank 
