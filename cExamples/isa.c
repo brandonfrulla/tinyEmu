@@ -71,7 +71,8 @@ char *disassemble(decoded *d) {
 decoded *decode(unsigned int inst){
     decoded *p = malloc(sizeof(decoded));
     p->opcode = inst >> 24;
-    p -> rd = inst >> 16 & 0xff;
+    
+
     
     return p;
 }

@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
             scanf("%s", file_name);
             load_memory(file_name);
         }
-        else if (strcmp(cmd, "disassemble") == 0) {
+        else if (strcmp(cmd, "translate") == 0) {
             printf("Enter inst: ");
             scanf("%x", &num);
             printf("num: %x\n", num);
