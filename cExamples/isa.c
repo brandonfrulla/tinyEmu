@@ -72,16 +72,16 @@ decoded *decode(unsigned int inst){
     decoded *p = malloc(sizeof(decoded));
     p->opcode = inst >> 24;
     switch(p->opcode){
-      case 12: case 11:
+      case STR: case LDR:
         p->rd = inst >> 16 & 0xff;
         p->address = inst >> 0 & 0xff;
         break;
-      case 13: case 14:
+      case LDX: case STX:
         p->rd = inst >> 16 & 0xff;
         p->offset = inst >> 8 & 0xff;
         p->rn = inst >> 0 & 0xff;
         break;
-      case 21: case 41:
+      case MOV: case CMP:
         p->rd = inst >> 16 & 0xff;
         p->condition = inst >> 8 & 0xff;
         if(p->condition == 128){
@@ -90,17 +90,21 @@ decoded *decode(unsigned int inst){
           p->immediate = inst >> 0 & 0xff;
         }
         break;
-      case 31: case 32: case 33: case 34: case 35: case 36: case 37:
+      case ADD: case SUB: case MUL: case DIV: case AND: case ORR: case EOR:
          p->rd = inst >> 16 & 0xff;
          p->rm = inst >> 8 & 0xff;
          p->rn = inst >> 0 & 0xff;
          break;
-      case 51:
+      case B:
         p->condition = inst >> 16 & 0xff;
-        
+        p->address =  inst >> 0 & 0xff;
+        break;
+      default:
+        return NULL;
+        break;
     }
-    
 
+    
     
     return p;
 }
