@@ -68,7 +68,43 @@ char *disassemble(decoded *d) {
 
 
 
-decoded *decode(unsigned int inst) {
-    printf("You need to implement decode()\n");
-    return NULL;
+decoded *decode(unsigned int inst){
+    decoded *p = malloc(sizeof(decoded));
+    p->opcode = inst >> 24;
+    switch(p->opcode){
+      case STR: case LDR:
+        p->rd = inst >> 16 & 0xff;
+        p->address = inst >> 0 & 0xff;
+        break;
+      case LDX: case STX:
+        p->rd = inst >> 16 & 0xff;
+        p->offset = inst >> 8 & 0xff;
+        p->rn = inst >> 0 & 0xff;
+        break;
+      case MOV: case CMP:
+        p->rd = inst >> 16 & 0xff;
+        p->condition = inst >> 8 & 0xff;
+        if(p->condition == 128){
+          p->rn = inst >> 0 & 0xff;
+        }else{
+          p->immediate = inst >> 0 & 0xff;
+        }
+        break;
+      case ADD: case SUB: case MUL: case DIV: case AND: case ORR: case EOR:
+         p->rd = inst >> 16 & 0xff;
+         p->rm = inst >> 8 & 0xff;
+         p->rn = inst >> 0 & 0xff;
+         break;
+      case B:
+        p->condition = inst >> 16 & 0xff;
+        p->address =  inst >> 0 & 0xff;
+        break;
+      default:
+        return NULL;
+        break;
+    }
+
+    
+    
+    return p;
 }
