@@ -1,0 +1,23 @@
+.data 100
+0xff
+.label x
+10
+.label feed
+feedabee
+# code following data
+.text
+mov r5, r7
+ldr r0 x
+mov r1, #10
+cmp r0, r1
+bne else
+mov r0, #64
+mov R3, #3
+add r0, r0, r3
+str r0, x
+b end
+.label else
+ldr r5, feed
+str r5, x
+.label end
+b end # loop on self
