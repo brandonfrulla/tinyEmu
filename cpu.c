@@ -44,64 +44,97 @@ void step() {
     int pc = registers[PC];
     system_bus(pc, &inst, READ);
     int opcode = inst >> 24;
+    //for info below, comment out if not needed
     printf("PC: %x, Opcode: %x, Instruction: %x\n", pc, opcode, inst);
     switch (opcode) { 
-    case LDR:
-        printf("LDR reached\n");
-        pc += 4;
-        break;
-    case STR:
-        printf("STR reached\n");
-        pc += 4;
-        break;
-    case LDX:
-        printf("LDX reached\n");
-        pc += 4;
-        break;
-    case STX:
-        printf("LDX reached\n");
-        pc += 4;
-        break;
-    case MOV:
-        printf("MOV reached\n");
-        pc += 4;
-        break;
-    case ADD:
-        printf("ADD reached\n");
-        pc += 4;
-        break;
-    case SUB:
-        printf("SUB reached\n");
-        pc += 4;
-        break;
-    case MUL:
-        printf("MUL reached\n");
-        pc += 4;
-        break;
-    case DIV:
-        printf("DIV reached\n");
-        pc += 4;
-        break;
-    case AND:
-        printf("AND reached\n");
-        pc += 4;
-        break;
-    case ORR:
-        printf("ORR reached\n");
-        pc += 4;
-        break;
-    case EOR:
-        printf("EOR reached\n");
-        pc += 4;
-        break;
-    case CMP:
-        printf("CMP reached\n");
-        pc += 4;
-        break;
-    case B:
-        printf("B reached\n");
-        //pc = address;
-        break;    
+        case LDR:
+            //printf("LDR reached\n");
+            reg = inst >> 16 & 0xff;
+            address = inst & 0xffff;
+            if (address > 1023 || reg > 15) {
+                printf("Address/Register out of bounds.\n");
+                exit(1);
+            }
+            registers[reg] = memory_fetch_word(address);
+            pc += 4;
+            break;
+        case STR:
+            //printf("STR reached\n");
+            reg = inst >> 16 & 0xff;
+            address = inst & 0xffff;
+            registers[reg] = address;
+            pc += 4;
+            break;
+        case LDX:
+            reg0 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            reg1 = inst >> 8 & 0xff;
+            registers[address] = memory_fetch_word(registers[reg0] + reg1);
+            pc += 4;
+            break;
+        case STX:
+            printf("STX reached\n");
+            pc += 4;
+            break;
+        case MOV:
+            //printf("MOV reached\n");
+            reg = inst & 0xff;
+            address = inst << 16 & 0xff;
+            registers[address] = registers[reg];
+            pc += 4;
+            break;
+        case ADD:
+            //printf("ADD reached\n");
+            reg1 = inst >> 8 & 0xff;
+            reg2 = inst & 0xff;
+            reg = inst >> 16 & 0xff;
+            registers[reg] = registers[reg1] + registers[reg2];
+            pc += 4;
+            break;
+        case SUB:
+            //printf("SUB reached\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            registers[address] = registers[reg0] - registers[reg1];
+            pc += 4;
+            break;
+        case MUL:
+            //printf("MUL reached\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            registers[address] = registers[reg0] * registers[reg1];
+            pc += 4;
+            break;
+        case DIV:
+            //printf("DIV reached\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            registers[address] = registers[reg1] / registers[reg0];
+            pc += 4;
+            break;
+        case AND:
+            printf("AND reached\n");
+            pc += 4;
+            break;
+        case ORR:
+            printf("ORR reached\n");
+            pc += 4;
+            break;
+        case EOR:
+            printf("EOR reached\n");
+            pc += 4;
+            break;
+        case CMP:
+            printf("CMP reached\n");
+            pc += 4;
+            break;
+        case B:
+            printf("B reached\n");
+            //pc = address;
+            break;    
     }
     registers[15] = pc; 
 }
