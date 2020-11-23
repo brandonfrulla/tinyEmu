@@ -116,15 +116,27 @@ void step() {
             pc += 4;
             break;
         case AND:
-            printf("AND reached\n");
+            //printf("AND reached\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            registers[address] = registers[reg0] & registers[reg1];
             pc += 4;
             break;
         case ORR:
-            printf("ORR reached\n");
+            //printf("ORR reached\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            registers[address] = registers[reg0] | registers[reg1];
             pc += 4;
             break;
         case EOR:
-            printf("EOR reached\n");
+            //printf("EOR reached\n");
+             reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            registers[address] = registers[reg0] ^ registers[reg1];
             pc += 4;
             break;
         case CMP:
