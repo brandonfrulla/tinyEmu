@@ -1,0 +1,26 @@
+.data 100
+0xff
+.label a
+0
+.label b
+4
+.label c
+8
+.label d
+1
+.text
+str r0, a
+str r1, b
+str r2, c
+ldr r0, a
+ldr r1, b
+ldr r2, c
+.label addloop 
+add r0, r0, r2
+str r0, a
+add r2, r2, d 
+str r2, c
+cmp r2, r1
+ble addloop
+.label endloop
+str r0, a
