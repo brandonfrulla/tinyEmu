@@ -104,7 +104,7 @@ void step() {
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
             reg = inst >> 16 & 0xff;
-            if (address > 1023 || (reg1 > 15 || reg2 > 15 || reg > 15)) {
+            if (reg1 > 15 || reg2 > 15 || reg > 15) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
