@@ -40,15 +40,15 @@ void show_regs() {
 
 //fetch decode execute
 void step() {
-    int inst, reg1, reg2, reg3, reg0, reg, address, immediate, eq, lt, gt;
+    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt;
     int pc = registers[PC];
     system_bus(pc, &inst, READ);
     int opcode = inst >> 24;
     //for info below, comment out if not needed
-    printf("PC: %x, Opcode: %x, Instruction: %x\n", pc, opcode, inst);
+    printf("PC: 0x%08x, inst: 0x%x, ", pc, inst);
     switch (opcode) { 
         case LDR:
-            //printf("LDR reached\n");
+            printf("ldr\n");
             reg = inst >> 16 & 0xff;
             address = inst & 0xffff;
             if (address > 1023 || reg > 15) {
@@ -59,13 +59,14 @@ void step() {
             pc += 4;
             break;
         case STR:
-            //printf("STR reached\n");
+            printf("str\n");
             reg = inst >> 16 & 0xff;
             address = inst & 0xffff;
             registers[reg] = address;
             pc += 4;
             break;
         case LDX:
+            printf("ldx\n");
             reg0 = inst & 0xff;
             address = inst >> 16 & 0xff;
             reg1 = inst >> 8 & 0xff;
@@ -73,18 +74,21 @@ void step() {
             pc += 4;
             break;
         case STX:
-            printf("STX reached\n");
+            printf("stx\n");
             pc += 4;
             break;
         case MOV:
-            //printf("MOV reached\n");
             reg = inst & 0xff;
             address = inst << 16 & 0xff;
             registers[address] = registers[reg];
             pc += 4;
+            cpsr = get_cpsr();
+            //this print statement is almost right. Good enough for 
+            //now- need to fix for this and the rest before completion though
+            printf("mov r%x, r%x\nCPSR: 0x%x\n", registers[reg], reg, cpsr);
             break;
         case ADD:
-            //printf("ADD reached\n");
+            printf("add\n");
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
             reg = inst >> 16 & 0xff;
@@ -92,7 +96,7 @@ void step() {
             pc += 4;
             break;
         case SUB:
-            //printf("SUB reached\n");
+            printf("sub\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -100,7 +104,7 @@ void step() {
             pc += 4;
             break;
         case MUL:
-            //printf("MUL reached\n");
+            printf("mul\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -108,7 +112,7 @@ void step() {
             pc += 4;
             break;
         case DIV:
-            //printf("DIV reached\n");
+            printf("div\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -116,7 +120,7 @@ void step() {
             pc += 4;
             break;
         case AND:
-            //printf("AND reached\n");
+            printf("and\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -124,7 +128,7 @@ void step() {
             pc += 4;
             break;
         case ORR:
-            //printf("ORR reached\n");
+            printf("orr\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -132,7 +136,7 @@ void step() {
             pc += 4;
             break;
         case EOR:
-            //printf("EOR reached\n");
+            printf("eor\n");
              reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -140,7 +144,7 @@ void step() {
             pc += 4;
             break;
         case CMP:
-            //printf("CMP reached\n");
+            printf("cmp\n");
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
             eq = registers[reg1] == registers[reg2];
@@ -162,7 +166,7 @@ void step() {
             pc += 4;
             break;
         case B:
-            //printf("B reached\n");
+            printf("b\n");
             address = inst & 0xffff;
             pc = address;;
             break;    
