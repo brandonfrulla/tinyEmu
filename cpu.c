@@ -128,12 +128,31 @@ void step() {
             pc += 4;
             break;
         case CMP:
-            printf("CMP reached\n");
+            //printf("CMP reached\n");
+            reg1 = inst >> 8 & 0xff;
+            reg2 = inst & 0xff;
+            eq = registers[reg1] == registers[reg2];
+            lt = registers[reg1] < registers[reg2];
+            gt = registers[reg1] > registers[reg2];
+            if (eq) {
+                bit_set(&cpsr, eq);
+                bit_clear(&cpsr, lt);
+                bit_clear(&cpsr, gt);
+            } else if (lt) {
+                bit_set(&cpsr, lt);
+                bit_clear(&cpsr, eq);
+                bit_clear(&cpsr, gt);
+            } else if (gt) {
+                bit_set(&cpsr, gt);
+                bit_clear(&cpsr, lt);
+                bit_clear(&cpsr, eq);
+            }
             pc += 4;
             break;
         case B:
-            printf("B reached\n");
-            //pc = address;
+            //printf("B reached\n");
+            address = inst & 0xffff;
+            pc = address;;
             break;    
     }
     registers[15] = pc; 
