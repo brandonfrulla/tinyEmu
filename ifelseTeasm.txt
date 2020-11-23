@@ -1,0 +1,19 @@
+.data 100
+0xff
+.label x
+0
+.label y
+4
+.label z
+8
+.text
+ldr r0, x
+ldr r1, y
+ldr r2, z
+cmp r0, r1
+bge else
+str r0, z
+b endif
+.label else
+str r1, z
+.label endif
