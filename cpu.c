@@ -40,101 +40,187 @@ void show_regs() {
 
 //fetch decode execute
 void step() {
-    int inst, reg1, reg2, reg3, reg0, reg, address, immediate, eq, lt, gt;
+    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt;
     int pc = registers[PC];
     system_bus(pc, &inst, READ);
     int opcode = inst >> 24;
     //for info below, comment out if not needed
-    printf("PC: %x, Opcode: %x, Instruction: %x\n", pc, opcode, inst);
+    printf("PC: 0x%08x, inst: 0x%x, ", pc, inst);
     switch (opcode) { 
         case LDR:
-            //printf("LDR reached\n");
+            printf("ldr\n");
             reg = inst >> 16 & 0xff;
             address = inst & 0xffff;
             if (address > 1023 || reg > 15) {
                 printf("Address/Register out of bounds.\n");
-                exit(1);
+                exit(-1);
             }
             registers[reg] = memory_fetch_word(address);
             pc += 4;
             break;
         case STR:
-            //printf("STR reached\n");
+            printf("str\n");
             reg = inst >> 16 & 0xff;
             address = inst & 0xffff;
+            if (address > 1023 || reg > 15) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[reg] = address;
             pc += 4;
             break;
         case LDX:
+            printf("ldx\n");
             reg0 = inst & 0xff;
             address = inst >> 16 & 0xff;
             reg1 = inst >> 8 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[address] = memory_fetch_word(registers[reg0] + reg1);
             pc += 4;
             break;
         case STX:
-            printf("STX reached\n");
+            printf("stx\n");
             pc += 4;
             break;
         case MOV:
-            //printf("MOV reached\n");
             reg = inst & 0xff;
             address = inst << 16 & 0xff;
+            if (address > 1023 || reg > 15) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[address] = registers[reg];
             pc += 4;
+            cpsr = get_cpsr();
+            //this print statement is almost right. Good enough for 
+            //now- need to fix for this and the rest before completion though
+            printf("mov r%x, r%x\nCPSR: 0x%x\n", registers[reg], reg, cpsr);
             break;
         case ADD:
-            //printf("ADD reached\n");
+            printf("add\n");
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
             reg = inst >> 16 & 0xff;
+            if (reg1 > 15 || reg2 > 15 || reg > 15) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[reg] = registers[reg1] + registers[reg2];
             pc += 4;
             break;
         case SUB:
-            //printf("SUB reached\n");
+            printf("sub\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[address] = registers[reg0] - registers[reg1];
             pc += 4;
             break;
         case MUL:
-            //printf("MUL reached\n");
+            printf("mul\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[address] = registers[reg0] * registers[reg1];
             pc += 4;
             break;
         case DIV:
-            //printf("DIV reached\n");
+            printf("div\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             registers[address] = registers[reg1] / registers[reg0];
             pc += 4;
             break;
         case AND:
-            printf("AND reached\n");
+            printf("and\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
+            registers[address] = registers[reg0] & registers[reg1];
             pc += 4;
             break;
         case ORR:
-            printf("ORR reached\n");
+            printf("orr\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
+            registers[address] = registers[reg0] | registers[reg1];
             pc += 4;
             break;
         case EOR:
-            printf("EOR reached\n");
+            printf("eor\n");
+            reg0 = inst >> 8 & 0xff;
+            reg1 = inst & 0xff;
+            address = inst >> 16 & 0xff;
+            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
+            registers[address] = registers[reg0] ^ registers[reg1];
             pc += 4;
             break;
         case CMP:
-            printf("CMP reached\n");
+            printf("cmp\n");
+            reg1 = inst >> 8 & 0xff;
+            reg2 = inst & 0xff;
+            if (reg1 > 15 || reg2 > 15) {
+                printf("Register out of bounds.\n");
+                exit(-1);
+            }
+            eq = registers[reg1] == registers[reg2];
+            lt = registers[reg1] < registers[reg2];
+            gt = registers[reg1] > registers[reg2];
+            if (eq) {
+                bit_set(&cpsr, eq);
+                bit_clear(&cpsr, lt);
+                bit_clear(&cpsr, gt);
+            } else if (lt) {
+                bit_set(&cpsr, lt);
+                bit_clear(&cpsr, eq);
+                bit_clear(&cpsr, gt);
+            } else if (gt) {
+                bit_set(&cpsr, gt);
+                bit_clear(&cpsr, lt);
+                bit_clear(&cpsr, eq);
+            }
             pc += 4;
             break;
         case B:
-            printf("B reached\n");
-            //pc = address;
-            break;    
+            printf("b\n");
+            address = inst & 0xffff;
+            if (address > 1023) {
+                printf("Address out of bounds.\n");
+                exit(-1);
+            }
+            pc = address;;
+            break;
+        default:
+            printf("Invalid instruction recieved.");
+            exit(-1);
     }
     registers[15] = pc; 
 }
