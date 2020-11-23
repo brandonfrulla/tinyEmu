@@ -1,0 +1,132 @@
+.data 100
+0xff
+.label a
+00
+.label b
+01
+.label c
+03
+.label d
+04
+.label e
+08
+.label f
+10
+.label g
+12
+.label h
+16
+.label i
+20
+.label j
+24
+.label k
+28
+.label l
+30
+.label m
+32
+.label n
+36
+.label o
+40
+.label p
+44
+.label q
+48
+.label r
+50
+.label s
+6
+.label t
+9
+.label u
+11
+.text
+mov r0, b
+str	r0, a
+mov	r0, c
+str	r0, d
+mov	r0, r
+str	r0, e
+mov	r0, s
+str	r0, g
+mov	r0, c
+str	r0, h
+mov	r0, c
+str	r0, i
+mov	r0, s
+str	r0, j
+mov	r0, e
+str	r0, k
+mov	r0, t
+str	r0, m
+mov	r0, f
+str r0, n
+mov	r0, a
+str	r0, o
+mov	r0, a
+str	r0, p
+str	r14, q
+mov	r1, u
+mov	r2, a
+ldr	r0, r2
+bl	count 
+str	r5, p
+mov	r2, a
+ldr	r0, r2
+bl	largest
+str	r3, p
+mov	r2, a
+ldr	r0, r2
+bl size
+str	r1, p
+b ending
+.label count
+mov	r4, a
+mov	r6, a
+mov	r5, c
+.label loop
+cmp	r6, r1
+bge	endcount
+cmp	r0, r5
+bne	else
+add	r4, r4 , 01
+.label else
+add	r6, r6, b
+add	r2, r2, d 
+ldr	r0, r2
+b loop
+.label endcount
+mov r15, r14
+.label largest
+mov	r1, f
+ldr	r3, r2
+ldr	r4, r2
+add	r1, r1, l
+mov	r5, r1
+.label largeloop
+cmp	r2, r5
+bge	endlarge
+cmp	r4, r3
+ble	lelse
+mov	r3, r4
+.label lelse
+add	r2, r2, d
+ldr	r4, r2
+b largeloop
+.label endlarge
+mov	r15, r14
+.label size
+mov	r1, a
+mov	r3, a
+.label sizeloop
+cmp	r3, r0
+beq	endsize
+add	r1, r1, b
+add	r2, r2, d
+ldr	r0, r2
+b sizeloop
+.label endsize
+mov	r15, r14
+.label ending
