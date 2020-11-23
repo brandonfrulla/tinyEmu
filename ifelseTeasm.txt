@@ -1,19 +1,13 @@
 .data 100
 0xff
-.label x
-0
-.label y
-4
-.label z
-8
 .text
-ldr r0, x
-ldr r1, y
-ldr r2, z
+ldr r0, 00
+ldr r1, 04
+ldr r2, 08
 cmp r0, r1
 bge else
-str r0, z
+str r0, 08
 b endif
 .label else
-str r1, z
+str r1, 08
 .label endif

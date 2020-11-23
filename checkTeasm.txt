@@ -1,0 +1,8 @@
+.data 100
+0xff
+.text
+str r10, 2111
+add r10, r11, 10
+beq 313c
+mov r7, r12
+cmp r17, r11
