@@ -289,8 +289,14 @@ void step_n(int n) {
 }
 
 void step_show_reg() {
+    int original_reg[15];
+    for (int i = 0; i < 15; i++) { original_reg[i] = registers[i]; }
     step();
-    show_regs();
+    for (int i = 0; i < 15; i++) {
+        if (original_reg[i] != registers[i]) {
+            printf("R[%d]:\t0x%.8X\n\t0x%.8X\n\n", i, original_reg[i], registers[i]);
+        }
+    };
 }
 
 void step_show_reg_mem() {
