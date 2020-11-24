@@ -49,13 +49,13 @@ void step() {
     int opcode = inst >> 24;
 
     //for info below, comment out if not needed
-    printf("PC: 0x%.8x, inst: 0x%.8x, %s", pc, inst, disassemble(decoded));
+    printf("PC: 0x%.8x, inst: 0x%.8x, %s\n", pc, inst, disassemble(decoded));
     switch (opcode) { 
         case LDR:
             printf("ldr\n");
             reg = inst >> 16 & 0xff;
             address = decoded->address;
-            if (address > 1023 || reg > 15) {
+            if (address > 1023 || reg > 16) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -66,7 +66,7 @@ void step() {
             printf("str\n");
             reg = inst >> 16 & 0xff;
             address = decoded->address;
-            if (address > 1023 || reg > 15) {
+            if (address > 1023 || reg > 16) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -78,7 +78,7 @@ void step() {
             reg0 = inst & 0xff;
             address = decoded->address;
             reg1 = inst >> 8 & 0xff;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -92,7 +92,7 @@ void step() {
         case MOV:
             reg = inst & 0xff;
             address = decoded->address;
-            if (address > 1023 || reg > 15) {
+            if (address > 1023 || reg > 16) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -105,7 +105,7 @@ void step() {
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
             reg = inst >> 16 & 0xff;
-            if (reg1 > 15 || reg2 > 15 || reg > 15) {
+            if (reg1 > 16 || reg2 > 16 || reg > 16) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -117,7 +117,7 @@ void step() {
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -129,7 +129,7 @@ void step() {
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -141,7 +141,7 @@ void step() {
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -153,7 +153,7 @@ void step() {
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -165,7 +165,7 @@ void step() {
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -177,7 +177,7 @@ void step() {
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
-            if (address > 1023 || (reg0 > 15 || reg1 > 15)) {
+            if (address > 1023 || (reg0 > 16 || reg1 > 16)) {
                 printf("Address/Register out of bounds.\n");
                 exit(-1);
             }
@@ -188,7 +188,7 @@ void step() {
             printf("cmp\n");
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
-            if (reg1 > 15 || reg2 > 15) {
+            if (reg1 > 16 || reg2 > 16) {
                 printf("Register out of bounds.\n");
                 exit(-1);
             }
@@ -289,7 +289,7 @@ void step() {
 
             break;
         default:
-            printf("Invalid instruction recieved.");
+            printf("Invalid instruction recieved.\n");
             exit(-1);
     }
     registers[15] = pc; 
@@ -307,13 +307,10 @@ void step_show_reg() {
 }
 
 void step_show_reg_mem() {
-    
-    // Save state of original registers / memory.
     int original_reg[15];
     for (int i = 0; i < 15; i++) { 
         original_reg[i] = registers[i]; 
     }
-
     int original_mem[32][2];
     int addr = 0x100;
     for (int i = 0; i < 32; i++) {
@@ -323,10 +320,7 @@ void step_show_reg_mem() {
         original_mem[i][2] = temp;
         addr += 4;
     }
-
     step();
-
-    // Check if there is a change, if so, print change.
     for (int i = 0; i < 15; i++) {
         if (original_reg[i] != registers[i]) {
             printf("R[%d]:\t0x%.8X\n\t0x%.8X\n\n", i, original_reg[i], registers[i]);
