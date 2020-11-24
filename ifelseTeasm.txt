@@ -1,5 +1,4 @@
 .data 100
-0xff
 .text
 mov r0, 0a
 mov r1, 14

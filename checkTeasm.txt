@@ -1,5 +1,4 @@
 .data 100
-0xff
 .text
 str r10, 2111
 add r10, r11, 10
