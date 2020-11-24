@@ -40,7 +40,7 @@ void show_regs() {
 
 //fetch decode execute
 void step() {
-    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt, cond, z;
+    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt, move, rn_loc, total;
     int pc = registers[PC];
     
     system_bus(pc, &inst, READ);
@@ -52,7 +52,6 @@ void step() {
     printf("PC: 0x%.8x, inst: 0x%.8x, %s\n", pc, inst, disassemble(decoded));
     switch (opcode) { 
         case LDR:
-            printf("ldr\n");
             reg = inst >> 16 & 0xff;
             address = decoded->address;
             if (address > 1023 || reg > 16) {
@@ -63,7 +62,6 @@ void step() {
             pc += 4;
             break;
         case STR:
-            printf("str\n");
             reg = inst >> 16 & 0xff;
             address = decoded->address;
             if (address > 1023 || reg > 16) {
@@ -74,7 +72,6 @@ void step() {
             pc += 4;
             break;
         case LDX:
-            printf("ldx\n");
             reg0 = inst & 0xff;
             address = decoded->address;
             reg1 = inst >> 8 & 0xff;
@@ -94,8 +91,7 @@ void step() {
             set_reg(PC, pc);
             break;
         case MOV:
-            int move;
-            int rn_loc = get_reg(decoded->rn);
+            rn_loc = get_reg(decoded->rn);
             if (decoded->condition == 128) {
                 move = rn_loc;
             } else {
@@ -106,7 +102,7 @@ void step() {
             set_reg(15, pc);
             break;
         case ADD:
-            int total = registers[decoded->rn] + registers[decoded->rm];
+            total = registers[decoded->rn] + registers[decoded->rm];
             pc += 4;
             set_reg(decoded->rd, total);
             break;
@@ -122,7 +118,6 @@ void step() {
             pc += 4;
             break;
         case MUL:
-            printf("mul\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
@@ -134,7 +129,6 @@ void step() {
             pc += 4;
             break;
         case DIV:
-            printf("div\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = inst >> 16 & 0xff;
@@ -146,7 +140,6 @@ void step() {
             pc += 4;
             break;
         case AND:
-            printf("and\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
@@ -158,7 +151,6 @@ void step() {
             pc += 4;
             break;
         case ORR:
-            printf("orr\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
@@ -170,7 +162,6 @@ void step() {
             pc += 4;
             break;
         case EOR:
-            printf("eor\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
@@ -182,7 +173,6 @@ void step() {
             pc += 4;
             break;
         case CMP:
-            printf("cmp\n");
             reg1 = decoded->rm;
             reg2 = decoded->rn;
             printf("reg1: %d, reg2: %d", reg1, reg2);
@@ -209,7 +199,6 @@ void step() {
             pc += 4;
             break;
         case B:
-
             if (decoded->condition == BAL) {
                 registers[PC] = decoded->address;
                 pc += 4;
@@ -226,7 +215,7 @@ void step() {
                     set_reg(PC, pc);
                 }
             } else if (decoded->condition == BNE) {
-                system_bus(address, &inst, READ);
+                system_bus(decoded->address, &inst, READ);
                 if (registers[Z] == 0) {
                     registers[PC] = decoded->address;
                     pc += 4;
