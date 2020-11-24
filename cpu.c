@@ -186,8 +186,8 @@ void step() {
             break;
         case CMP:
             printf("cmp\n");
-            reg1 = inst >> 8 & 0xff;
-            reg2 = inst & 0xff;
+            reg1 = decoded->rm;
+            reg2 = decoded->rn;
             if (reg1 > 16 || reg2 > 16) {
                 printf("Register out of bounds.\n");
                 exit(-1);
