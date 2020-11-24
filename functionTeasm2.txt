@@ -1,0 +1,90 @@
+.data 100
+0xff
+.text
+mov r0, 01
+str	r0, 00
+mov	r0, 03
+str	r0, 04
+mov	r0, 132
+str	r0, 08
+mov	r0, 06
+str	r0, 0c
+mov	r0, 03
+str	r0, 10
+mov	r0, 03
+str	r0, 14
+mov	r0, 06
+str	r0, 18
+mov	r0, 08
+str	r0, 1c
+mov	r0, 09
+str	r0, 20
+mov	r0, 0a
+str r0, 24
+mov	r0, 00
+str	r0, 28
+mov	r0, 00
+str	r0, 2c
+str	r14, 30
+mov	r1, 0b
+mov	r2, 00
+ldr	r0, r2
+bl	count 
+str	r5, 2c
+mov	r2, 00
+ldr	r0, r2
+bl	largest
+str	r3, 2c
+mov	r2, 00
+ldr	r0, r2
+bl size
+str	r1, 2c
+b ending
+.label count
+mov	r4, 00
+mov	r6, 00
+mov	r5, 03
+.label loop
+cmp	r6, r1
+bge	endcount
+cmp	r0, r5
+bne	else
+add	r4, r4 , 01
+.label else
+add	r6, r6, 01
+add	r2, r2, 04
+ldr	r0, r2
+b loop
+.label endcount
+mov r15, r14
+.label largest
+mov	r1, 0a
+ldr	r3, r2
+ldr	r4, r2
+add	r1, r1, 1e
+mov	r5, r1
+.label largeloop
+cmp	r2, r5
+bge	endlarge
+cmp	r4, r3
+ble	lelse
+mov	r3, r4
+.label lelse
+add	r2, r2, 04
+ldr	r4, r2
+b largeloop
+.label endlarge
+mov	r15, r14
+.label size
+mov	r1, 00
+mov	r3, 00
+.label sizeloop
+cmp	r3, r0
+beq	endsize
+add	r1, r1, 01
+add	r2, r2, 04
+ldr	r0, r2
+b sizeloop
+.label endsize
+mov	r15, r14
+.label ending
