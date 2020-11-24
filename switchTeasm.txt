@@ -7,49 +7,49 @@ str r0, 00
 str r1, 04
 str r2, 08
 cmp r0, 01
-beq Case1
+beq case1
 cmp r0, 02
-beq Case2
+beq case2
 cmp r0, 03
-beq Case3
+beq case3
 cmp r0, 04
-beq Case4
+beq case4
 cmp r0, 05
-beq Case5
+beq case5
 cmp r0, 06
-beq Case6
+beq case6
 cmp r0, 07
-beq Case7
-b CaseDef
-.label Case1
+beq case7
+b casedef
+.label case1
 add r0, r1, r2
 str r0, 00
 b endif
-.label Case2
+.label case2
 sub r0, r1, r2
 str r0, 00
 b endif 
-.label Case3
+.label case3
 mul r0, r1, r2
 str r0, 00
 b endif
-.label Case4
+.label case4
 mul r0, r1, r2
 str r0, 00
 b endif
-.label Case5
+.label case5
 and r0, r1, r2
 str r0, 00
 b endif
-.label Case6 
+.label case6
 orr r0, r1, r2
 str r0, 00
 b endif
-.label Case7
+.label case7
 eor r0, r1, r2
 str r0, 00
 b endif
-.label CaseDef 
+.label casedef
 mov r0, 00
 str r0, 00
 .label endif
