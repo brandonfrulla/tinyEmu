@@ -45,6 +45,8 @@ void step() {
     system_bus(pc, &inst, READ);
     int opcode = inst >> 24;
     //for info below, comment out if not needed
+    decoded *d = decode(inst);
+    printf("%s===s\n",disassemble(d));
     printf("PC: 0x%08x, inst: 0x%x, ", pc, inst);
     switch (opcode) { 
         case LDR:
