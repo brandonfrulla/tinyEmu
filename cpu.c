@@ -188,6 +188,7 @@ void step() {
             printf("cmp\n");
             reg1 = inst >> 8 & 0xff;
             reg2 = inst & 0xff;
+            printf("reg1: %d, reg2: %d", reg1, reg2);
             if (reg1 > 16 || reg2 > 16) {
                 printf("Register out of bounds.\n");
                 exit(-1);

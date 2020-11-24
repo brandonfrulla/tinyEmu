@@ -1,5 +1,4 @@
 .data 100
-0xff
 .text
 mov r0, 01
 mov r1, 02
@@ -13,44 +12,44 @@ cmp r0, 02
 beq Case2
 cmp r0, 03
 beq Case3
-cmp r0, b
+cmp r0, 04
 beq Case4
-cmp r0, h
+cmp r0, 05
 beq Case5
-cmp r0, i
+cmp r0, 06
 beq Case6
-cmp r0, j
+cmp r0, 07
 beq Case7
 b CaseDef
 .label Case1
 add r0, r1, r2
-str r0, a
+str r0, 00
 b endif
 .label Case2
 sub r0, r1, r2
-str r0, a
+str r0, 00
 b endif 
 .label Case3
 mul r0, r1, r2
-str r0, a
+str r0, 00
 b endif
 .label Case4
 mul r0, r1, r2
-str r0, a
+str r0, 00
 b endif
 .label Case5
 and r0, r1, r2
-str r0, a
+str r0, 00
 b endif
 .label Case6 
 orr r0, r1, r2
-str r0, a
+str r0, 00
 b endif
 .label Case7
 eor r0, r1, r2
-str r0, a
+str r0, 00
 b endif
 .label CaseDef 
-mov r0, a
-str r0, a
+mov r0, 00
+str r0, 00
 .label endif

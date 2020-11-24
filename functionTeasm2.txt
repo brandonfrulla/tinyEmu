@@ -1,11 +1,10 @@
 .data 100
-0xff
 .text
 mov r0, 01
 str	r0, 00
 mov	r0, 03
 str	r0, 04
-mov	r0, 132
+mov	r0, 32
 str	r0, 08
 mov	r0, 06
 str	r0, 0c
