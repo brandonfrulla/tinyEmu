@@ -307,13 +307,10 @@ void step_show_reg() {
 }
 
 void step_show_reg_mem() {
-    
-    // Save state of original registers / memory.
     int original_reg[15];
     for (int i = 0; i < 15; i++) { 
         original_reg[i] = registers[i]; 
     }
-
     int original_mem[32][2];
     int addr = 0x100;
     for (int i = 0; i < 32; i++) {
@@ -323,10 +320,7 @@ void step_show_reg_mem() {
         original_mem[i][2] = temp;
         addr += 4;
     }
-
     step();
-
-    // Check if there is a change, if so, print change.
     for (int i = 0; i < 15; i++) {
         if (original_reg[i] != registers[i]) {
             printf("R[%d]:\t0x%.8X\n\t0x%.8X\n\n", i, original_reg[i], registers[i]);
