@@ -86,34 +86,31 @@ void step() {
             pc += 4;
             break;
         case STX:
-            printf("stx\n");
+            reg0 = inst &0xff;
+            address = inst >> 16 & 0xff;
+            reg1 = inst >> 8 & 0xff;
+            registers[address] = memory_fetch_word(registers[reg0] + reg1);
             pc += 4;
+            set_reg(PC, pc);
             break;
         case MOV:
-            reg = inst & 0xff;
-            address = decoded->address;
-            if (address > 1023 || reg > 16) {
-                printf("Address/Register out of bounds.\n");
-                exit(-1);
+            int move;
+            int rn_loc = get_reg(decoded->rn);
+            if (decoded->condition == 128) {
+                move = rn_loc;
+            } else {
+                move = decoded->immediate;
             }
-            registers[address] = registers[reg];
+            set_reg(decoded->rd, move);
             pc += 4;
-            cpsr = get_cpsr();
+            set_reg(15, pc);
             break;
         case ADD:
-            printf("add\n");
-            reg1 = inst >> 8 & 0xff;
-            reg2 = inst & 0xff;
-            reg = inst >> 16 & 0xff;
-            if (reg1 > 16 || reg2 > 16 || reg > 16) {
-                printf("Address/Register out of bounds.\n");
-                exit(-1);
-            }
-            registers[reg] = registers[reg1] + registers[reg2];
+            int total = registers[decoded->rn] + registers[decoded->rm];
             pc += 4;
+            set_reg(decoded->rd, total);
             break;
         case SUB:
-            printf("sub\n");
             reg0 = inst >> 8 & 0xff;
             reg1 = inst & 0xff;
             address = decoded->address;
