@@ -40,12 +40,16 @@ void show_regs() {
 
 //fetch decode execute
 void step() {
-    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt, cond;
+    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt, cond, z;
     int pc = registers[PC];
+    
     system_bus(pc, &inst, READ);
+
+    decoded *decoded = decode(inst);
     int opcode = inst >> 24;
+
     //for info below, comment out if not needed
-    printf("PC: 0x%08x, inst: 0x%x, ", pc, inst);
+    printf("PC: 0x%.8x, inst: 0x%.8x, %s", pc, inst, disassemble(decoded));
     switch (opcode) { 
         case LDR:
             printf("ldr\n");
@@ -95,9 +99,6 @@ void step() {
             registers[address] = registers[reg];
             pc += 4;
             cpsr = get_cpsr();
-            //this print statement is almost right. Good enough for 
-            //now- need to fix for this and the rest before completion though
-            printf("mov r%x, r%x\nCPSR: 0x%x\n", registers[reg], reg, cpsr);
             break;
         case ADD:
             printf("add\n");
@@ -210,19 +211,82 @@ void step() {
             pc += 4;
             break;
         case B:
-            cond = inst >> 16;
-            cond = cond << 23;
-            printf("%x\n", cond);
-            /** if(cond == BAL) {
 
+            if (decoded->condition == BAL) {
+                registers[PC] = decoded->address;
+                pc += 4;
+                set_reg(PC, pc);
+            } else if (decoded->condition == BEQ) {
+                system_bus(pc, &inst, READ);
+                if (registers[Z]== 1) {
+                    registers[PC] = decoded->address;
+                    pc += 4;
+                    set_reg(PC, pc);
+                } else {
+                    cpsr = 0;
+                    pc += 4;
+                    set_reg(PC, pc);
+                }
+            } else if (decoded->condition == BNE) {
+                system_bus(address, &inst, READ);
+                if (registers[Z] == 0) {
+                    registers[PC] = decoded->address;
+                    pc += 4;
+                    set_reg(PC, pc);
+                } else {
+                    cpsr = 0;
+                    pc += 4;
+                    set_reg(PC, pc);
+                }
+            } else if (decoded->condition == BLE) {
+                if (registers[Z] == 1 || registers[N] != registers[V]) {
+                    registers[PC] = decoded->address;
+                    pc += 4;
+                    set_reg(PC, pc);
+                } else {
+                    cpsr = 0;
+                    pc += 4;
+                    set_reg(PC, pc);
+                }
+            } else if (decoded->condition == BLT) {
+                if (registers[N] != registers[V]) {
+                    registers[PC] = decoded->address;
+                    pc += 4;
+                    set_reg(PC, pc);
+                } else {
+                    cpsr = 0;
+                    pc += 4;
+                    set_reg(PC, pc);
+                }
+            } else if (decoded->condition == BGE) {
+                if (registers[N] == registers[V]) {
+                    registers[PC] = decoded->address;
+                    pc += 4;
+                    set_reg(PC, pc);
+                } else {
+                    cpsr = 0;
+                    pc += 4;
+                    set_reg(PC, pc);
+                }
+            } else if (decoded->condition == BGT) {
+                if (registers[Z] == 0 && registers[N] == registers[V]) {
+                    registers[PC] = decoded->address;
+                    pc += 4;
+                    set_reg(PC, pc);
+                } else {
+                    cpsr = 0;
+                    pc += 4;
+                    set_reg(PC, pc);
+                }
+
+            } else if (decoded->condition == BL) {
+                pc += 4;
+                set_reg(R14, pc);
+                registers[PC] = decoded->address;
+            } else {
+                printf("Invalid branch condition.\n");
             }
 
-            address = inst & 0xffff;
-            if (address > 1023) {
-                printf("Address out of bounds.\n");
-                exit(-1);
-            }
-            pc = address;*/
             break;
         default:
             printf("Invalid instruction recieved.");

@@ -1,5 +1,5 @@
 Project: Prject Cars DB
-Language: a32 Assembly
+Language: a32 Assembly - tinyEmu
 Student: Brandon M. Frulla, Luis P. Maldonado
 Prof: Mr. Cooper
 Course: CPSC 305
@@ -42,8 +42,11 @@ Nov 23 2020 - Worked from 08:00 - 21:00
     > continued implementation for invalidinstruction.s
     > updated workLog
     > translated .s files into .txt files consistent with teasm syntax
-    > implemented various b cases to the step function
-
+    > began inmplementation of various b cases to the step function
+Nov 24 2020 - Worked from 9:30 - 
+    > continued b case implementation 
+    >
+    
 Honor Pledge:
      
 “I hereby declare upon my word of honor that I have neither given nor received 
