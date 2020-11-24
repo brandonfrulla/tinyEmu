@@ -27,7 +27,7 @@ int get_reg(int reg) {
     return registers[reg];
 }
 
-int get_cpsr() {
+int get_cpsr() { 
     return cpsr;
 }
 
@@ -40,7 +40,7 @@ void show_regs() {
 
 //fetch decode execute
 void step() {
-    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt;
+    int inst, reg1, reg2, reg0, reg, address, eq, lt, gt, cond;
     int pc = registers[PC];
     system_bus(pc, &inst, READ);
     int opcode = inst >> 24;
@@ -210,13 +210,19 @@ void step() {
             pc += 4;
             break;
         case B:
-            printf("b\n");
+            cond = inst >> 16;
+            cond = cond << 23;
+            printf("%x\n", cond);
+            /** if(cond == BAL) {
+
+            }
+
             address = inst & 0xffff;
             if (address > 1023) {
                 printf("Address out of bounds.\n");
                 exit(-1);
             }
-            pc = address;;
+            pc = address;*/
             break;
         default:
             printf("Invalid instruction recieved.");
@@ -237,13 +243,39 @@ void step_show_reg() {
 }
 
 void step_show_reg_mem() {
-    step_show_reg();
-    //some other method call to show memory
+    
+    // Save state of original registers / memory.
+    int original_reg[15];
+    for (int i = 0; i < 15; i++) { 
+        original_reg[i] = registers[i]; 
+    }
 
-    /*f. step_show_reg​ shall display ​step​’s display plus it shall display the values ofregisters changed by the instruction.
-    PC: 0x00000128, inst: 0x31000003, add r0, r0, r3CPSR: 0x40000000reg[0]: before: 0x00000064, after: 0x00000067reg[15]: before: 0x00000128, 
-    after: 0x0000012cg.step_show_reg_mem​ shall display ​step_show_reg​’s display plus it shall displaythe values of memory locations changed by 
-    the instruction.PC: 0x0000012c, inst: 0x12000104, str r0, 0x104CPSR: 0x40000000reg[15]: before: 0x0000012c, after: 0x00000130addr: 0x0104, 
-    before: 0x00000010, after: 0x00000067*/
+    int original_mem[32][2];
+    int addr = 0x100;
+    for (int i = 0; i < 32; i++) {
+        int temp;
+        system_bus(addr, &temp, READ);
+        original_mem[i][1] = addr;
+        original_mem[i][2] = temp;
+        addr += 4;
+    }
+
+    step();
+
+    // Check if there is a change, if so, print change.
+    for (int i = 0; i < 15; i++) {
+        if (original_reg[i] != registers[i]) {
+            printf("R[%d]:\t0x%.8X\n\t0x%.8X\n\n", i, original_reg[i], registers[i]);
+        }
+    }
+    int temp;
+    addr = 0x100;
+    for (int i = 0; i < 32; i++) {
+        system_bus(addr, &temp, READ);
+        if (original_mem[i][2] != temp) {
+            printf("0x%.3X:\t0x%.8X\n\t0x%.8X\n\n", addr, original_mem[i][2], temp);
+        }
+        addr += 4;
+    }
 }
 
