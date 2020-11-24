@@ -1,12 +1,12 @@
 .data 100
 0xff
 .text
+mov r0, 00
+mov r1, 0a
+mov r2, 01
 str r0, 00
 str r1, 04
 str r2, 08
-ldr r0, 00
-ldr r1, 04
-ldr r2, 08
 .label addloop 
 add r0, r0, r2
 str r0, 00
