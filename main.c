@@ -56,11 +56,7 @@ int main(int argc, char **argv) {
             printf("num: %x\n", num);
             decoded *d = decode(num);
             if (d != NULL)
-<<<<<<< HEAD
-                printf("%s\n", disassemble(d);
-=======
-                printf("%s\n address: %d", disassemble(d), d->address);
->>>>>>> a8f41ea78d2de4feea5ba87c016c767b2d1711b0
+                printf("%s\n", disassemble(d));
             else
                 printf("Invalid Inst\n");
         }
