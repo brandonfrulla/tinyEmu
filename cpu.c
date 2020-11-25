@@ -91,6 +91,10 @@ void step() {
             set_reg(PC, pc);
             break;
         case MOV:
+            if (decoded->address > 1023 || (decoded->rn > 16 || decoded->rm > 16)) {
+                printf("Address/Register out of bounds.\n");
+                exit(-1);
+            }
             rn_loc = get_reg(decoded->rn);
             if (decoded->condition == 128) {
                 move = rn_loc;
