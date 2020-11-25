@@ -46,7 +46,7 @@ void step() {
     system_bus(pc, &inst, READ);
 
     decoded *decoded = decode(inst);
-    int opcode = inst >> 24;
+    int opcode = decoded->opcode;
 
     //for info below, comment out if not needed
     printf("PC: 0x%.8x, inst: 0x%.8x, %s\n", pc, inst, disassemble(decoded));
@@ -270,7 +270,8 @@ void step() {
                 set_reg(R14, pc);
                 registers[PC] = decoded->address;
             } else {
-                printf("Invalid branch condition.\n");
+                printf("Invalid instrunction.\n");
+                exit(-1);
             }
 
             break;
