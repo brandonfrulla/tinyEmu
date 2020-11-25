@@ -48,6 +48,12 @@ Nov 24 2020 - Worked from 9:30 - 20:00
     > finished .s files and translated them to teasm format
     > ran testing with gusty driver
     > troubleshooting various translation errors in the teasm files
+Nov 25 2020 - Worked from 08:00 - 16:30
+    > did final debugging and ensured successful runs
+    > updated worklog final time
+    > cleaned up git repos
+    > finalized step function as well as step_show_mem and step_show_mem_reg
+    > fin
     
 Honor Pledge:
      
