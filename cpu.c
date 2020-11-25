@@ -175,7 +175,6 @@ void step() {
         case CMP:
             reg1 = decoded->rm;
             reg2 = decoded->rn;
-            printf("reg1: %d, reg2: %d", reg1, reg2);
             if (reg1 > 16 || reg2 > 16) {
                 printf("Register out of bounds.\n");
                 exit(-1);
