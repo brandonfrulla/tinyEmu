@@ -1,4 +1,4 @@
-.data 100
+.data 64
 .text
 mov r0, 0a
 mov r1, 14
